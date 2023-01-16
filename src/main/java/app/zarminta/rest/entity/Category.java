@@ -26,10 +26,8 @@ public class Category extends BaseEntity {
 
     private String slug;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "categories")
     @JsonIgnore
-    @JoinTable(name = "category_posts",
-            joinColumns = @JoinColumn(name = "category_"),
-            inverseJoinColumns = @JoinColumn(name = "posts_"))
     private List<Post> posts = new ArrayList<>();
+
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1")
 public class DemoController {
     private EntityService entityService;
     @GetMapping("/demo-controller")
