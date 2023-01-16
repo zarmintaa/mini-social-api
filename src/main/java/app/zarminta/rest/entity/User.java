@@ -1,5 +1,6 @@
 package app.zarminta.rest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,9 +68,11 @@ public class User implements UserDetails{
     }
 
     @OneToMany(mappedBy = "authorId", orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
 }

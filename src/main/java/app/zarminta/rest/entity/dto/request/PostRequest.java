@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,7 +17,7 @@ public class PostRequest {
     private String slug;
     private String content;
     private String image;
-    private ArrayList<Integer> categoryId;
-    private ArrayList<Integer> tagId;
+    private List<Integer> categoryId;
+    private List<Integer> tagId;
 
 }
