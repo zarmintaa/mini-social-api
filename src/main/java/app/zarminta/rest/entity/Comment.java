@@ -26,10 +26,7 @@ public class Comment extends BaseEntity{
     @Column(columnDefinition = "BIGINT")
     private BigInteger id;
 
-
-
     private String content;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id")
