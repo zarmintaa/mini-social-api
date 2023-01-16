@@ -21,14 +21,15 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        tagService.postData(TagRequest.builder().name("FirstPost").slug("first-post").build());
-        tagService.postData(TagRequest.builder().name("ProgrammingWithMe").slug("programming-with-me").build());
+        tagService.postData(TagRequest.builder().name("First Post").slug("first-post").build());
+        tagService.postData(TagRequest.builder().name("UI/UX").slug("ui/ux").build());
         tagService.postData(TagRequest.builder().name("BlackLiveMatters").slug("black-live-matters").build());
 
-        categoryService.postData(CategoryRequest.builder().title("coding").slug("coding").build());
+        categoryService.postData(CategoryRequest.builder().title("Coding").slug("coding").build());
         categoryService.postData(CategoryRequest.builder().title("Programming Tools").slug("programming-tools").build());
         categoryService.postData(CategoryRequest.builder().title("UI Design").slug("ui-design").build());
 
         authenticationService.register(RegisterRequest.builder().firstname("Mamang").lastname("Gamink").email("mamang@gmail.com").password("123").build());
+        authenticationService.register(RegisterRequest.builder().firstname("Reza").lastname("Gamink").email("reza@gmail.com").password("123").build());
     }
 }
