@@ -1,7 +1,9 @@
 package app.zarminta.rest.service;
 
-import app.zarminta.rest.entity.*;
-import app.zarminta.rest.entity.dto.request.CommentRequest;
+import app.zarminta.rest.entity.Category;
+import app.zarminta.rest.entity.Post;
+import app.zarminta.rest.entity.Tag;
+import app.zarminta.rest.entity.User;
 import app.zarminta.rest.entity.dto.request.PostRequest;
 import app.zarminta.rest.entity.dto.response.MessageResponse;
 import app.zarminta.rest.repository.*;
@@ -12,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,7 +29,14 @@ public class PostService {
     public ResponseEntity<Object> getAll(){
         List<Post> posts = postRepository.findAll();
         if (posts.isEmpty()){
-            return entityService.jsonResponse(HttpStatus.OK, MessageResponse.builder().message("No one post found!").build());
+            return entityService
+                    .jsonResponse(
+                            HttpStatus.OK,
+                            MessageResponse
+                                    .builder()
+                                    .message("No one post found!")
+                                    .build()
+                    );
         }
         return ResponseEntity
                 .ok()
@@ -40,7 +48,13 @@ public class PostService {
         User userLogged = entityService.getUserLogged();
         List<Post> posts = userLogged.getPosts();
         if (posts.isEmpty()){
-            return entityService.jsonResponse(HttpStatus.OK, MessageResponse.builder().message("User doesn't have any posts").build());
+            return entityService
+                    .jsonResponse(
+                            HttpStatus.OK,
+                            MessageResponse.builder()
+                                    .message("User doesn't have any posts")
+                            .build()
+                    );
         }
         return entityService.jsonResponse(HttpStatus.OK, posts);
     }

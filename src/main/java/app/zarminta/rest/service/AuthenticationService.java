@@ -1,11 +1,13 @@
 package app.zarminta.rest.service;
 
 import app.zarminta.rest.entity.dto.request.AuthenticationRequest;
+import app.zarminta.rest.entity.dto.request.ResetPasswordRequest;
 import app.zarminta.rest.entity.dto.response.AuthenticationResponse;
 import app.zarminta.rest.entity.dto.request.RegisterRequest;
 import app.zarminta.rest.config.JwtService;
 import app.zarminta.rest.entity.Role;
 import app.zarminta.rest.entity.User;
+import app.zarminta.rest.entity.dto.response.MessageResponse;
 import app.zarminta.rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private EntityService entityService;
 
+
     public ResponseEntity<Object> register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())){
             return entityService.jsonResponse(HttpStatus.FOUND, "Email with " + request.getEmail() + " exists!");
@@ -36,6 +39,8 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .followingCounter(0)
+                .followerCounter(0)
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -61,5 +66,29 @@ public class AuthenticationService {
                 .role(user.getRole().name())
                 .token(jwtToken)
                 .build();
+    }
+
+    public ResponseEntity<Object> resetPassword(ResetPasswordRequest resetPasswordRequest){
+        if (!repository.existsByEmail(resetPasswordRequest.getEmail())) {
+            return entityService
+                    .jsonResponse(HttpStatus.NOT_FOUND, MessageResponse.builder()
+                            .message("Email not found!")
+                            .build());
+        }
+
+        User user = repository.findByEmail(resetPasswordRequest.getEmail()).get();
+        boolean isMatchPassword = passwordEncoder.matches(resetPasswordRequest.getCurrentPassword(), user.getPassword());
+        if (!isMatchPassword){
+            return entityService
+                    .jsonResponse(HttpStatus.NOT_FOUND, MessageResponse.builder()
+                            .message("Wrong Password")
+                            .build());
+        }
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        repository.save(user);
+        return entityService
+                .jsonResponse(HttpStatus.NOT_FOUND, MessageResponse.builder()
+                        .message("Password updated successfully!")
+                        .build());
     }
 }
