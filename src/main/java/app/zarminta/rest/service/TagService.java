@@ -18,6 +18,13 @@ public class TagService {
         return tagRepository.findById(id).get();
     }
 
+    public ResponseEntity<Object> getPostsByTag(String slug) {
+        if (!tagRepository.existsBySlug(slug)) {
+            return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Tag with slug = " + slug + " not found!");
+        }
+        return entityService.jsonResponse(HttpStatus.OK, tagRepository.findBySlug(slug).get().getPosts());
+    }
+
     public Tag postData(TagRequest tagRequest) {
         var tag = Tag
                 .builder()
@@ -28,7 +35,7 @@ public class TagService {
         return tag;
     }
 
-    public Tag getTag(int id){
+    public Tag getTag(int id) {
         return tagRepository.findById(id).get();
     }
 

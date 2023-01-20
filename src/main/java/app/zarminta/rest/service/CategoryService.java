@@ -1,12 +1,15 @@
 package app.zarminta.rest.service;
 
 import app.zarminta.rest.entity.Category;
+import app.zarminta.rest.entity.Post;
 import app.zarminta.rest.entity.dto.request.CategoryRequest;
 import app.zarminta.rest.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +21,14 @@ public class CategoryService {
         return categoryRepository
                 .findById(id)
                 .get();
+    }
+
+    public ResponseEntity<Object> getPostsByCategory(String slug) {
+        if (!categoryRepository.existsBySlug(slug)) {
+            return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Category with slug = " + slug + " not found");
+        }
+        List<Post> posts = categoryRepository.findBySlug(slug).get().getPosts();
+        return entityService.jsonResponse(HttpStatus.OK, posts);
     }
 
     public ResponseEntity<Object> findCategory(int id) {

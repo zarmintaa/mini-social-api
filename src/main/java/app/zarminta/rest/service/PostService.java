@@ -8,7 +8,10 @@ import app.zarminta.rest.entity.dto.request.PostByTagCategory;
 import app.zarminta.rest.entity.dto.request.PostByTagRequest;
 import app.zarminta.rest.entity.dto.request.PostRequest;
 import app.zarminta.rest.entity.dto.response.MessageResponse;
-import app.zarminta.rest.repository.*;
+import app.zarminta.rest.repository.CategoryRepository;
+import app.zarminta.rest.repository.PostRepository;
+import app.zarminta.rest.repository.TagRepository;
+import app.zarminta.rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,11 +28,11 @@ public class PostService {
     private final TagService tagService;
     private final UserRepository userRepository;
     private final CategoryService categoryService;
+    private final TagRepository tagRepository;
     private PostRepository postRepository;
     private EntityService entityService;
-    private final TagRepository tagRepository;
 
-    public ResponseEntity<Object> getAllPostByTags(PostByTagRequest tagRequest){
+    public ResponseEntity<Object> getAllPostByTags(PostByTagRequest tagRequest) {
         List<Tag> tags = new ArrayList<>();
         for (Integer tag : tagRequest.getTags()) {
             tags.add(tagService.getTag(tag));
@@ -38,7 +41,7 @@ public class PostService {
         return entityService.jsonResponse(HttpStatus.OK, null);
     }
 
-    public ResponseEntity<Object> getAllPostByCategories(PostByTagCategory categoryRequest){
+    public ResponseEntity<Object> getAllPostByCategories(PostByTagCategory categoryRequest) {
         List<Category> categories = new ArrayList<>();
         for (Integer categoryId : categoryRequest.getCategories()) {
             categories.add(categoryService.getById(categoryId));
