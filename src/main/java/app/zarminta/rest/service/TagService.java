@@ -14,28 +14,32 @@ public class TagService {
     private final TagRepository tagRepository;
     private final EntityService entityService;
 
-    public Tag getById(int id){
+    public Tag getById(int id) {
         return tagRepository.findById(id).get();
     }
 
-    public Tag postData(TagRequest tagRequest){
+    public Tag postData(TagRequest tagRequest) {
         var tag = Tag
                 .builder()
                 .name(tagRequest.getName())
                 .slug(tagRequest.getSlug())
                 .build();
-    tagRepository.save(tag);
+        tagRepository.save(tag);
         return tag;
     }
 
-    public ResponseEntity<Object> getTagById(int id){
+    public Tag getTag(int id){
+        return tagRepository.findById(id).get();
+    }
+
+    public ResponseEntity<Object> getTagById(int id) {
         if (!tagRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Tag with id = " + id + " not found!");
         }
         return entityService.jsonResponse(HttpStatus.OK, getTagById(id));
     }
 
-    public ResponseEntity<Object> updateTag(int id, TagRequest tagRequest){
+    public ResponseEntity<Object> updateTag(int id, TagRequest tagRequest) {
         if (!tagRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Tag with id = " + id + " not found!");
         }
@@ -46,7 +50,7 @@ public class TagService {
         return entityService.jsonResponse(HttpStatus.CREATED, response);
     }
 
-    public ResponseEntity<Object> deleteTag(int id){
+    public ResponseEntity<Object> deleteTag(int id) {
         if (!tagRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Tag with id = " + id + " not found!");
         }

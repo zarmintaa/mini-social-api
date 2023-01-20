@@ -1,6 +1,5 @@
 package app.zarminta.rest.config;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +22,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
+                .disable()
+                .cors()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**")

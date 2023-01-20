@@ -14,20 +14,20 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final EntityService entityService;
 
-    public Category getById(int id){
+    public Category getById(int id) {
         return categoryRepository
                 .findById(id)
                 .get();
     }
 
-    public ResponseEntity<Object> findCategory(int id){
-        if (!categoryRepository.existsById(id)){
+    public ResponseEntity<Object> findCategory(int id) {
+        if (!categoryRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Category with id = " + id + " not found");
         }
         return entityService.jsonResponse(HttpStatus.OK, getById(id));
     }
 
-    public Category postData(CategoryRequest categoryRequest){
+    public Category postData(CategoryRequest categoryRequest) {
         var category = Category
                 .builder()
                 .title(categoryRequest.getTitle())
@@ -36,8 +36,8 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public ResponseEntity<Object> updateCategory(int id, CategoryRequest categoryRequest){
-        if (!categoryRepository.existsById(id)){
+    public ResponseEntity<Object> updateCategory(int id, CategoryRequest categoryRequest) {
+        if (!categoryRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Category with id = " + id + " not found");
         }
         Category category = getById(id);
@@ -47,8 +47,8 @@ public class CategoryService {
         return entityService.jsonResponse(HttpStatus.CREATED, response);
     }
 
-    public ResponseEntity<Object> deleteById(int id){
-        if (!categoryRepository.existsById(id)){
+    public ResponseEntity<Object> deleteById(int id) {
+        if (!categoryRepository.existsById(id)) {
             return entityService.jsonResponse(HttpStatus.NOT_FOUND, "Category with id = " + id + " not found");
         }
         Category category = getById(id);

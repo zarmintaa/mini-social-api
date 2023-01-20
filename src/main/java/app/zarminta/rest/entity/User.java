@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_user")
-public class User implements UserDetails{
+public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
@@ -35,6 +33,38 @@ public class User implements UserDetails{
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "authorId", orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(name = "_user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<User> followers = new ArrayList<>();
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(name = "_user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private List<User> following = new ArrayList<>();
+
+    @Column(columnDefinition = "integer default 0")
+    private Integer followerCounter = 0;
+
+    @Column(columnDefinition = "integer default 0")
+    private Integer followingCounter = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,15 +101,6 @@ public class User implements UserDetails{
         return true;
     }
 
-    @OneToMany(mappedBy = "authorId", orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Comment> comments = new ArrayList<>();
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,33 +108,10 @@ public class User implements UserDetails{
         User user = (User) o;
         return id != null && Objects.equals(id, user.id);
     }
+
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    @ToString.Exclude
-    @ManyToMany
-    @JoinTable(name = "_user_followers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    private List<User> followers = new ArrayList<>();
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    @ToString.Exclude
-    @ManyToMany
-    @JoinTable(name = "_user_following",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private List<User> following = new ArrayList<>();
-
-    @Column(columnDefinition = "integer default 0")
-    private Integer followerCounter = 0;
-
-    @Column(columnDefinition = "integer default 0")
-    private Integer followingCounter = 0;
 
 }

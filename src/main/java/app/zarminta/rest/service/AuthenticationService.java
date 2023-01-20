@@ -1,17 +1,15 @@
 package app.zarminta.rest.service;
 
-import app.zarminta.rest.entity.dto.request.AuthenticationRequest;
-import app.zarminta.rest.entity.dto.request.ResetPasswordRequest;
-import app.zarminta.rest.entity.dto.response.AuthenticationResponse;
-import app.zarminta.rest.entity.dto.request.RegisterRequest;
 import app.zarminta.rest.config.JwtService;
 import app.zarminta.rest.entity.Role;
 import app.zarminta.rest.entity.User;
+import app.zarminta.rest.entity.dto.request.AuthenticationRequest;
+import app.zarminta.rest.entity.dto.request.RegisterRequest;
+import app.zarminta.rest.entity.dto.request.ResetPasswordRequest;
+import app.zarminta.rest.entity.dto.response.AuthenticationResponse;
 import app.zarminta.rest.entity.dto.response.MessageResponse;
 import app.zarminta.rest.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +28,7 @@ public class AuthenticationService {
 
 
     public ResponseEntity<Object> register(RegisterRequest request) {
-        if (repository.existsByEmail(request.getEmail())){
+        if (repository.existsByEmail(request.getEmail())) {
             return entityService.jsonResponse(HttpStatus.FOUND, "Email with " + request.getEmail() + " exists!");
         }
         var user = User.builder()
@@ -68,7 +66,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public ResponseEntity<Object> resetPassword(ResetPasswordRequest resetPasswordRequest){
+    public ResponseEntity<Object> resetPassword(ResetPasswordRequest resetPasswordRequest) {
         if (!repository.existsByEmail(resetPasswordRequest.getEmail())) {
             return entityService
                     .jsonResponse(HttpStatus.NOT_FOUND, MessageResponse.builder()
@@ -78,7 +76,7 @@ public class AuthenticationService {
 
         User user = repository.findByEmail(resetPasswordRequest.getEmail()).get();
         boolean isMatchPassword = passwordEncoder.matches(resetPasswordRequest.getCurrentPassword(), user.getPassword());
-        if (!isMatchPassword){
+        if (!isMatchPassword) {
             return entityService
                     .jsonResponse(HttpStatus.NOT_FOUND, MessageResponse.builder()
                             .message("Wrong Password")

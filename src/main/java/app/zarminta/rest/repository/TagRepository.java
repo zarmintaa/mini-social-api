@@ -1,6 +1,5 @@
 package app.zarminta.rest.repository;
 
-import app.zarminta.rest.entity.Post;
 import app.zarminta.rest.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 

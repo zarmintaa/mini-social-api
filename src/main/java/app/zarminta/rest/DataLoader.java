@@ -1,6 +1,5 @@
 package app.zarminta.rest;
 
-import app.zarminta.rest.entity.dto.request.AuthenticationRequest;
 import app.zarminta.rest.entity.dto.request.CategoryRequest;
 import app.zarminta.rest.entity.dto.request.RegisterRequest;
 import app.zarminta.rest.entity.dto.request.TagRequest;

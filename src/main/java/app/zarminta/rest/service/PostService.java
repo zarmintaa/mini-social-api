@@ -4,6 +4,8 @@ import app.zarminta.rest.entity.Category;
 import app.zarminta.rest.entity.Post;
 import app.zarminta.rest.entity.Tag;
 import app.zarminta.rest.entity.User;
+import app.zarminta.rest.entity.dto.request.PostByTagCategory;
+import app.zarminta.rest.entity.dto.request.PostByTagRequest;
 import app.zarminta.rest.entity.dto.request.PostRequest;
 import app.zarminta.rest.entity.dto.response.MessageResponse;
 import app.zarminta.rest.repository.*;
@@ -19,16 +21,35 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class PostService {
+    private final CategoryRepository categoryRepository;
+    private final TagService tagService;
+    private final UserRepository userRepository;
+    private final CategoryService categoryService;
     private PostRepository postRepository;
     private EntityService entityService;
-    private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
-    private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
 
-    public ResponseEntity<Object> getAll(){
+    public ResponseEntity<Object> getAllPostByTags(PostByTagRequest tagRequest){
+        List<Tag> tags = new ArrayList<>();
+        for (Integer tag : tagRequest.getTags()) {
+            tags.add(tagService.getTag(tag));
+        }
+//        List<Post> allByTags = postRepository.findAllByTags(tags);
+        return entityService.jsonResponse(HttpStatus.OK, null);
+    }
+
+    public ResponseEntity<Object> getAllPostByCategories(PostByTagCategory categoryRequest){
+        List<Category> categories = new ArrayList<>();
+        for (Integer categoryId : categoryRequest.getCategories()) {
+            categories.add(categoryService.getById(categoryId));
+        }
+//        List<Post> allByCategories = postRepository.findAllByCategories(categories);
+        return entityService.jsonResponse(HttpStatus.OK, null);
+    }
+
+    public ResponseEntity<Object> getAll() {
         List<Post> posts = postRepository.findAll();
-        if (posts.isEmpty()){
+        if (posts.isEmpty()) {
             return entityService
                     .jsonResponse(
                             HttpStatus.OK,
@@ -44,24 +65,24 @@ public class PostService {
                 .body(posts);
     }
 
-    public ResponseEntity<Object> getPostUser(){
+    public ResponseEntity<Object> getPostUser() {
         User userLogged = entityService.getUserLogged();
         List<Post> posts = userLogged.getPosts();
-        if (posts.isEmpty()){
+        if (posts.isEmpty()) {
             return entityService
                     .jsonResponse(
                             HttpStatus.OK,
                             MessageResponse.builder()
                                     .message("User doesn't have any posts")
-                            .build()
+                                    .build()
                     );
         }
         return entityService.jsonResponse(HttpStatus.OK, posts);
     }
 
-    public ResponseEntity<Object> getById(int id){
+    public ResponseEntity<Object> getById(int id) {
         boolean exists = postRepository.existsById(id);
-        if (!exists){
+        if (!exists) {
             return entityService
                     .jsonResponse(
                             HttpStatus.NOT_FOUND,
@@ -75,7 +96,7 @@ public class PostService {
                 .jsonResponse(HttpStatus.OK, post);
     }
 
-    public Post getPost(int id){
+    public Post getPost(int id) {
         return postRepository.findById(id).get();
     }
 
@@ -95,9 +116,8 @@ public class PostService {
     }
 
 
-
     public ResponseEntity<Object> updateData(int id, PostRequest postRequest) {
-        if (!postRepository.existsById(id)){
+        if (!postRepository.existsById(id)) {
             return entityService
                     .jsonResponse(
                             HttpStatus.NOT_FOUND,
@@ -117,25 +137,25 @@ public class PostService {
         return entityService.jsonResponse(HttpStatus.CREATED, updatedPost);
     }
 
-    public List<Category> extractCategory(List<Integer> integers){
+    public List<Category> extractCategory(List<Integer> integers) {
         List<Category> categories = new ArrayList<>();
         for (Integer integer : integers) {
             categories.add(categoryRepository.findById(integer).get());
         }
         return categories;
     }
-    
-    public List<Tag> extractTags(List<Integer> integers){
+
+    public List<Tag> extractTags(List<Integer> integers) {
         List<Tag> tags = new ArrayList<>();
         for (Integer integer : integers) {
-            tags.add(tagRepository.findById(integer).get());
+            tags.add(tagService.getTag(integer));
         }
         return tags;
     }
 
 
     public ResponseEntity<Object> deleteData(int id) {
-        if (!postRepository.existsById(id)){
+        if (!postRepository.existsById(id)) {
             return entityService
                     .jsonResponse(
                             HttpStatus.NOT_FOUND,

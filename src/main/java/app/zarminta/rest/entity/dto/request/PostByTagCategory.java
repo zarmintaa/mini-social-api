@@ -11,12 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequest {
-    private String title;
-    private String slug;
-    private String content;
-    private String image;
-    private List<Integer> categoryId;
-    private List<Integer> tagId;
+public class PostByTagCategory {
+    private List<Integer> categories;
 
 }

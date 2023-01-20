@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class DemoController {
     private EntityService entityService;
+
     @GetMapping("/demo-controller")
-    public ResponseEntity<String> sayHello(){
+    public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello from secured endpoint");
     }
 
     @GetMapping("/test")
-    public Object getObject(){
+    public Object getObject() {
         return entityService.getUserLogged();
     }
 }

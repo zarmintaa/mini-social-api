@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 public class EntityService {
     private UserRepository userRepository;
 
-    public ResponseEntity<Object> jsonResponse(HttpStatus httpStatus, Object data){
+    public ResponseEntity<Object> jsonResponse(HttpStatus httpStatus, Object data) {
         return ResponseEntity
                 .status(httpStatus)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(data);
     }
 
-    public User getUserLogged(){
+    public User getUserLogged() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email).get();
     }
